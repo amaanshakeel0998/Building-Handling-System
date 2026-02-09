@@ -1,0 +1,375 @@
+:root {
+    --header-bg: #4396e2;
+    --body-bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --accent-color: #4396e2;
+}
+
+body {
+    background: var(--body-bg);
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+    -webkit-tap-highlight-color: transparent; /* Remove blue highlight on tap */
+}
+
+header {
+    background: var(--header-bg);
+    box-shadow: 0 2px 6px rgba(197, 75, 75, 0.1);
+}
+
+header .container {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+header h1 {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.sidebar {
+    background: var(--body-bg);
+    min-height: 100vh;
+    border-right: 1px solid #e0e0e0;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+    border-radius: 10px;
+    padding: 12px 16px; /* Slightly bigger touch target */
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background: rgba(67,150,226,0.1);
+}
+
+.sidebar .nav-link.active {
+    background: var(--accent-color);
+    color: white;
+}
+
+.card {
+    background: var(--card-bg);
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.card-body {
+    padding: 1.8rem;
+}
+
+.card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 0.65rem 1rem;
+    font-size: 1rem; /* Better readability on mobile */
+}
+
+.btn-primary,
+.btn-success,
+.btn-secondary {
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem; /* Bigger touch targets on mobile */
+    font-weight: 600;
+    min-height: 48px; /* Minimum touch-friendly size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #3a85cf;
+}
+
+.btn-success {
+    background: #198754;
+    border: none;
+}
+
+.configured-item {
+    background: rgba(67,150,226,0.12);
+    border-left: 4px solid var(--accent-color);
+    padding: 12px 16px;
+    margin: 10px 0;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem; /* Slightly smaller text on mobile */
+}
+
+#container {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#view-3d {
+    width: 100%;
+    height: 80vh;
+    min-height: 500px;
+    position: relative;
+    overflow: hidden;
+    touch-action: none; /* Prevents page scroll while touching 3D canvas */
+}
+
+/* Loading bar improvements */
+#loading-bar {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Responsive width on mobile */
+    max-width: 480px;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    display: none;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+#loading-text {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+#loading-progress {
+    height: 10px;
+    background: #4caf50;
+    border-radius: 5px;
+}
+
+/* Offcanvas mobile fix */
+.offcanvas {
+    width: 85vw !important; /* Better fit on phones */
+    max-width: 340px;
+}
+
+/* Floor Schedule Modal Styles */
+#floor-schedule-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+}
+
+#floor-schedule-table table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* Forces horizontal scroll on small screens if needed */
+}
+
+#floor-schedule-table th, #floor-schedule-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+#floor-schedule-table th {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.timetable-block {
+    background: rgba(67,150,226,0.12);
+    border: 1px solid var(--accent-color);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    cursor: pointer; /* Better touch feedback */
+    touch-action: manipulation;
+}
+
+.timetable-block:active {
+    background: rgba(67,150,226,0.3); /* Visible tap feedback */
+}
+
+.droppable.drag-over {
+    background: rgba(67,150,226,0.2);
+    border: 2px dashed var(--accent-color);
+}
+
+/* Searchable dropdown styling */
+.searchable-select .options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 220px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.searchable-select .options li {
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.searchable-select .options li:hover,
+.searchable-select .options li:active {
+    background: #f0f0f0;
+}
+
+/* ──────────────────────────────────────────────── */
+/* Mobile-specific improvements */
+/* ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.2rem;
+    }
+
+    .card-body {
+        padding: 1.2rem; /* Less padding on small screens */
+    }
+
+    .btn-primary, .btn-success {
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+    }
+
+    .configured-item {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+
+    #view-3d {
+        height: 70vh; /* Leave more space for UI on phones */
+    }
+
+    .sidebar {
+        position: fixed;
+        z-index: 1040;
+        width: 280px;
+    }
+
+    .modal-dialog {
+        margin: 0.5rem; /* Full-width modals on mobile */
+    }
+
+    .modal-content {
+        border-radius: 16px;
+    }
+
+    /* Bigger touch targets for inputs and buttons */
+    input, select, button {
+        min-height: 48px;
+        font-size: 1rem;
+    }
+
+    /* Prevent double-tap zoom on mobile */
+    body {
+        touch-action: manipulation;
+    }
+
+    /* ──────────────────────────────────────────────── */
+/* Mobile: Hide sidebar & give full width to main content */
+/* ──────────────────────────────────────────────── */
+@media (max-width: 992px) {  /* Tablets + phones — adjust 992px if needed */
+    .row {
+        flex-direction: column; /* Stack sidebar on top of main */
+    }
+
+    .sidebar {
+        width: 100% !important;           /* Full width */
+        min-height: auto;                 /* No forced full height */
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 1rem 0;
+        background: #f8f9fa;              /* Light bg to separate */
+    }
+
+    .sidebar .nav {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .sidebar .nav-link {
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+    }
+
+    main {
+        padding: 1rem !important;         /* Less side padding on mobile */
+        width: 100% !important;
+    }
+
+    /* Make sure 3D view and cards take full available width */
+    #view-3d,
+    .card {
+        width: 100% !important;
+        margin: 0 auto;
+    }
+
+    /* Optional: Hide sidebar completely and use top nav instead (cleaner) */
+    /* Uncomment below if you prefer NO sidebar on mobile at all */
+    /*
+    .sidebar {
+        display: none !important;
+    }
+    main {
+        margin-left: 0 !important;
+        padding-top: 1rem;
+    }
+    */
+
+    /* ──────────────────────────────────────────────── */
+/* Mobile: Stop sidebar/top nav from being sticky/fixed when scrolling */
+/* ──────────────────────────────────────────────── */
+@media (max-width: 992px) {
+    .sidebar {
+        position: static !important;     /* Remove any fixed/sticky behavior */
+        top: auto !important;
+        bottom: auto !important;
+        z-index: auto !important;
+        margin-bottom: 1.5rem;           /* Add space below so it doesn't touch cards */
+    }
+
+    /* If you made sidebar horizontal on top in previous fix */
+    .sidebar .nav {
+        position: relative !important;
+        top: auto !important;
+    }
+
+    /* Make sure main content isn't pushed or overlapped */
+    main {
+        margin-top: 0 !important;
+        padding-top: 1rem !important;
+    }
+
+    /* Optional: Make tabs/buttons bigger/easier to tap */
+    .sidebar .nav-link {
+        min-width: 120px;
+        text-align: center;
+        padding: 1rem 1.2rem;
+    }
+}

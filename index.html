@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Building Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="text-white">
+        <div class="container d-flex justify-content-between align-items-center py-5">
+            <div class="pt-5">
+                <h1 class="h2 mb-0">🏗️ 3D Buildings & Rooms Generator</h1>
+            </div>
+            <button class="btn btn-light rounded-pill px-4 py-2 mt-5" data-bs-toggle="offcanvas" data-bs-target="#themeOffcanvas" aria-controls="themeOffcanvas">
+                🎨 Customize
+            </button>
+        </div>
+    </header>
+
+    <div class="container mt-3">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 bg-light sidebar border-end p-3">
+                <ul class="nav flex-column gap-2">
+                    <li><a href="#" class="nav-link active rounded px-3 py-2" data-view="input">📊 Data Input</a></li>
+                    <li><a href="#" class="nav-link rounded px-3 py-2" data-view="view">🏢 View Buildings</a></li>
+                </ul>
+            </nav>
+
+            <main class="col-md-9 col-lg-10 ps-md-4 pt-3">
+                <div id="input-view">
+                    <h2 class="mb-4">Input Data</h2>
+
+                    <div class="card mb-4 shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">🏢 Building Configuration</h5>
+                            <label class="form-label">Number of Buildings</label>
+                            <input type="number" id="num-buildings" class="form-control mb-2" min="1" max="10" value="1">
+                            <button id="setup-buildings" class="btn btn-primary">Setup Buildings</button>
+                            <div id="configured-buildings" class="mt-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4 shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">✏️ Building Naming</h5>
+                            <label class="form-label">Select Building</label>
+                            <select id="select-building" class="form-select mb-2" disabled></select>
+                            <label class="form-label">Custom Name</label>
+                            <input type="text" id="building-name" class="form-control mb-2" placeholder="e.g., UOR 1">
+                            <button id="add-name" class="btn btn-primary" disabled>Add Name</button>
+                            <div id="named-buildings" class="mt-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4 shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">📐 Floor Configuration</h5>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Select Building</label>
+                                    <select id="select-building-for-floors" class="form-select mb-2"></select>
+                                </div>
+                            </div>
+                            <label class="form-label">Number of Floors</label>
+                            <input type="number" id="num-floors" class="form-control mb-2" min="1" value="5">
+                            <button id="add-floors" class="btn btn-primary">Add Floors</button>
+                            <div id="configured-floors" class="mt-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4 shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">🚪 Rooms Configuration</h5>
+                            <p id="no-rooms" class="text-muted mb-3">No rooms added yet.</p>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Select Building</label>
+                                    <select id="room-select-building" class="form-select"></select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Select Floor</label>
+                                    <select id="room-select-floor" class="form-select"></select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Room Name</label>
+                                    <input type="text" id="room-name" class="form-control" placeholder="e.g., Room 101">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Capacity (Students)</label>
+                                    <input type="number" id="room-capacity" class="form-control" value="50">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Day</label>
+                                    <select id="room-day" class="form-select">
+                                        <option value="">Select day</option>
+                                        <option value="Monday">Monday</option>
+                                        <option value="Tuesday">Tuesday</option>
+                                        <option value="Wednesday">Wednesday</option>
+                                        <option value="Thursday">Thursday</option>
+                                        <option value="Friday">Friday</option>
+                                        <option value="Saturday">Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Time</label>
+                                    <input type="text" id="room-time" class="form-control dropdown-toggle" data-bs-toggle="dropdown" placeholder="e.g., 08:30 – 10:00, 10:00 – 11:30" autocomplete="off">
+                                    <div class="dropdown-menu p-3 shadow" style="min-width: 240px; max-height: 280px; overflow-y: auto;" data-bs-auto-close="outside">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input time-check" type="checkbox" value="08:30 – 10:00" id="time-0830">
+                                            <label class="form-check-label" for="time-0830">08:30 – 10:00</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input time-check" type="checkbox" value="10:00 – 11:30" id="time-1000">
+                                            <label class="form-check-label" for="time-1000">10:00 – 11:30</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input time-check" type="checkbox" value="11:30 – 01:00" id="time-1130">
+                                            <label class="form-check-label" for="time-1130">11:30 – 01:00</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input time-check" type="checkbox" value="01:00 – 02:30" id="time-0100">
+                                            <label class="form-check-label" for="time-0100">01:00 – 02:30</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input time-check" type="checkbox" value="02:30 – 04:00" id="time-0230">
+                                            <label class="form-check-label" for="time-0230">02:30 – 04:00</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Teacher</label>
+                                    <div class="searchable-select position-relative" id="teacher-select">
+                                        <input type="text" id="room-teacher" class="form-control" placeholder="-- Select Teacher or type --" autocomplete="off">
+                                        <ul class="options list-group position-absolute w-100 mt-1 shadow" style="display: none; z-index: 1000;"></ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Subject</label>
+                                    <div class="searchable-select position-relative" id="subject-select">
+                                        <input type="text" id="room-subject" class="form-control" placeholder="-- Select Subject or type --" autocomplete="off">
+                                        <ul class="options list-group position-absolute w-100 mt-1 shadow" style="display: none; z-index: 1000;"></ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Semester</label>
+                                    <select id="room-semester" class="form-select">
+                                        <option value="">-- Select Semester --</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Department</label>
+                                    <input type="text" id="room-department" class="form-control dropdown-toggle" data-bs-toggle="dropdown" placeholder="Select department" readonly>
+                                    <div class="dropdown-menu p-3 shadow" style="min-width: 300px; max-height: 320px; overflow-y: auto;" data-bs-auto-close="outside">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input dept-check" type="checkbox" value="BS CS-Computer Science" id="dept-bs-cs">
+                                            <label class="form-check-label" for="dept-bs-cs">BS CS-Computer Science</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input dept-check" type="checkbox" value="BS SE-Software Engineering" id="dept-bs-se">
+                                            <label class="form-check-label" for="dept-bs-se">BS SE-Software Engineering</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input dept-check" type="checkbox" value="BBA-Busines Adminstration" id="dept-bba">
+                                            <label class="form-check-label" for="dept-bba">BBA-Busines Adminstration</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input dept-check" type="checkbox" value="AF-Accounting & Finance" id="dept-af">
+                                            <label class="form-check-label" for="dept-af">AF-Accounting & Finance</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input dept-check" type="checkbox" value="DDCA-Digital Design & Computer Arts" id="dept-ddca">
+                                            <label class="form-check-label" for="dept-ddca">DDCA-Digital Design & Computer Arts</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input dept-check" type="checkbox" value="ELS-English & Linguistic Studies " id="dept-els">
+                                            <label class="form-check-label" for="dept-els">ELS-English & Linguistic Studies</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input dept-check" type="checkbox" value="ID-Internal Design" id="dept-id">
+                                            <label class="form-check-label" for="dept-id">ID-Internal Design</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input dept-check" type="checkbox" value="PSY-Psycology" id="dept-psy">
+                                            <label class="form-check-label" for="dept-psy">PSY-Psycology</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="add-room" class="btn btn-primary mt-3">Add Room</button>
+                            <div id="added-rooms" class="mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Generate + Clear buttons centered -->
+                    <div class="d-flex justify-content-center mt-4 gap-3">
+                        <button id="generate-btn" class="btn btn-success btn-lg">Generate Buildings</button>
+                        <button id="clear-data-btn" class="btn btn-outline-danger btn-lg">Clear All Data</button>
+                    </div>
+                </div>
+
+                <div id="view-3d" style="display: none; height: 80vh; position: relative;">
+                    <div id="container"></div>
+                    <div id="loading-bar">
+                        <div id="loading-text">Constructing buildings... 0%</div>
+                        <div id="loading-progress"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Theme Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="themeOffcanvas" aria-labelledby="themeLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="themeLabel">🎨 Theme Customization</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mb-3">
+                <label class="form-label">Header Color</label>
+                <input type="color" id="header-color" class="form-control form-control-color" value="#4396e2">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Body/Section Color</label>
+                <input type="color" id="body-color" class="form-control form-control-color" value="#f5f7fa">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Card Background</label>
+                <input type="color" id="card-color" class="form-control form-control-color" value="#ffffff">
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Accent Color</label>
+                <input type="color" id="accent-color" class="form-control form-control-color" value="#4396e2">
+            </div>
+            <h6>Quick Presets</h6>
+            <div class="row g-2 mb-4">
+                <div class="col-6">
+                    <button class="btn preset-btn w-100" data-preset="default" style="background: #4396e2; color: white;">Default Blue</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn preset-btn w-100" data-preset="purple" style="background: #6f42c1; color: white;">Purple</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn preset-btn w-100" data-preset="green" style="background: #198754; color: white;">Green</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn preset-btn w-100" data-preset="orange" style="background: #fd7e14; color: white;">Orange</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn preset-btn w-100" data-preset="red" style="background: #dc3545; color: white;">Red</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn preset-btn w-100" data-preset="dark" style="background: #212529; color: white;">Dark</button>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button id="reset-theme" class="btn btn-secondary w-50">Reset</button>
+                <button id="apply-theme" class="btn btn-primary w-50">Apply Theme</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floor Schedule Modal -->
+    <div class="modal fade" id="floorScheduleModal" tabindex="-1" aria-labelledby="floorScheduleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="floorScheduleLabel">Floor Schedule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="floor-schedule-table"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Building Availability Checker Modal – NOW WITH CLICK-TO-DROPDOWN LIKE ROOM CONFIG -->
+    <div class="modal fade" id="buildingAvailabilityModal" tabindex="-1" aria-labelledby="buildingAvailabilityLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="buildingAvailabilityLabel">Availability Checker</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="building-name-in-modal" class="fw-bold mb-3"></p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Day</label>
+                            <select id="avail-day" class="form-select">
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Time</label>
+                            <input type="text" id="avail-time" class="form-control dropdown-toggle" data-bs-toggle="dropdown" 
+                                   placeholder="e.g. 08:30 – 10:00, 10:00 – 11:30" autocomplete="off">
+                            <div class="dropdown-menu p-3 shadow" style="min-width: 240px; max-height: 280px; overflow-y: auto;" data-bs-auto-close="outside">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input time-check" type="checkbox" value="08:30 – 10:00" id="avail-time-0830">
+                                    <label class="form-check-label" for="avail-time-0830">08:30 – 10:00</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input time-check" type="checkbox" value="10:00 – 11:30" id="avail-time-1000">
+                                    <label class="form-check-label" for="avail-time-1000">10:00 – 11:30</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input time-check" type="checkbox" value="11:30 – 01:00" id="avail-time-1130">
+                                    <label class="form-check-label" for="avail-time-1130">11:30 – 01:00</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input time-check" type="checkbox" value="01:00 – 02:30" id="avail-time-0100">
+                                    <label class="form-check-label" for="avail-time-0100">01:00 – 02:30</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input time-check" type="checkbox" value="02:30 – 04:00" id="avail-time-0230">
+                                    <label class="form-check-label" for="avail-time-0230">02:30 – 04:00</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Minimum Students Needed (optional)</label>
+                            <input type="number" id="avail-min-capacity" class="form-control" placeholder="e.g. 40" min="1">
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button id="search-avail-btn" class="btn btn-success w-100">🔍 Find Free Rooms</button>
+                    </div>
+
+                    <div id="avail-results" class="mt-4"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingModalLabel">Book This Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="fw-bold mb-3" id="booking-room-info"></p>
+
+                    <div class="mb-3">
+                        <label class="form-label">Teacher Name</label>
+                        <input type="text" id="booking-room-teacher" class="form-control" placeholder="Enter teacher name">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <input type="text" id="booking-room-subject" class="form-control" placeholder="Enter subject name">
+                    </div>
+
+                    <div class="mt-4">
+                        <button id="confirm-booking-btn" class="btn btn-primary w-100">Confirm Booking</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- Your main script – AFTER Firebase -->
+<script type="module" src="script.js"></script>
+    <!-- Teacher searchable dropdown -->
+    <script>
+        (function () {
+            const TEACHERS = [
+                "Dr. Amad Ud Din", "Dr. Abdul Waheed", "Mr. Muhammad Adil", "Ms. Khadija Waheed",
+                "Ms. Farah Nazeer", "Ms. Aina Merzia", "Dr. Rubab Tahir", "Ms. Anna Malik",
+                "Dr. Bilal", "Dr. Saniya Moazzam", "Dr. Aisha Parveen", "Mr. Muhammad Faran",
+                "Ms. Amna Malik", "Ms. Mehwish Riaz", "Mr. Imran Ejaz", "Dr. Salman Chughtai",
+                "Ms. Esha Gul", "Dr. Haider Nazir"
+            ];
+
+            const input = document.getElementById("room-teacher");
+            const wrapper = document.getElementById("teacher-select");
+            const list = wrapper.querySelector(".options");
+
+            function normalize(str) { return (str || "").toLowerCase().trim(); }
+
+            function renderOptions(filter = "") {
+                const query = normalize(filter);
+                const filtered = TEACHERS.filter(t => normalize(t).includes(query))
+                                       .sort((a, b) => a.localeCompare(b));
+
+                list.innerHTML = "";
+                if (filtered.length === 0) { list.style.display = "none"; return; }
+
+                filtered.forEach(teacher => {
+                    const li = document.createElement("li");
+                    li.className = "list-group-item list-group-item-action px-3 py-2";
+                    li.textContent = teacher;
+                    li.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        input.value = teacher;
+                        list.style.display = "none";
+                    });
+                    li.addEventListener("mousedown", (e) => e.preventDefault());
+                    list.appendChild(li);
+                });
+
+                list.style.display = "block";
+            }
+
+            input.addEventListener("focus", () => renderOptions(input.value));
+            input.addEventListener("input", () => renderOptions(input.value));
+
+            document.addEventListener("click", (e) => {
+                if (!wrapper.contains(e.target)) list.style.display = "none";
+            });
+
+            list.addEventListener("mousedown", (e) => e.preventDefault());
+        })();
+    </script>
+
+    <!-- Subject searchable dropdown -->
+    <script>
+        (function () {
+            const SUBJECTS = [
+                "Application of Information & Communication Technologies (GEN-102)",
+                "Artificial Intelligence (CS-308)",
+                "Calculus & Analytical Geometry (MATH-123)",
+                "Programming Fundamentals – Theory (CS-111)",
+                "Programming Fundamentals – Lab (CS/CL-111)",
+                "Object Oriented Programming – Theory (CS-112)",
+                "Object Oriented Programming – Lab (CL-112)",
+                "Computer Networks (CS-307)",
+                "Quantitative Reasoning-I (GEN-103)",
+                "Quantitative Reasoning-II (GEN-204)",
+                "Functional English (GEN-107)",
+                "Expository Writing (GEN-108)",
+                "Pakistan Studies (GEN-202)",
+                "Civics & Community Engagement (GEN-304)",
+                "Understanding of Holy Quran-I (GEN-101)",
+                "Introduction to Psychology (PSY-112)",
+                "Cognitive Psychology (PSY-122)",
+                "Social Psychology (PSY-322)",
+                "Ethical Issues in Psychology (PSY-224)",
+                "Light Color & Imaging (GEN-305)",
+                "Drawing From Observation & Material (CA-402)",
+                "Visual Communication-I (DE-113)",
+                "Figure & Perspective Drawing (CA-403)",
+                "History of Arts in Ancient Civilization (CA-410)",
+                "Fundamentals of Drawing (CA-401)",
+                "Material & Process (AHU-109)"
+            ];
+
+            const input = document.getElementById("room-subject");
+            const wrapper = document.getElementById("subject-select");
+            const list = wrapper.querySelector(".options");
+
+            function normalize(str) { return (str || "").toLowerCase().trim(); }
+
+            function renderOptions(filter = "") {
+                const query = normalize(filter);
+                const filtered = SUBJECTS.filter(t => normalize(t).includes(query))
+                                       .sort((a, b) => a.localeCompare(b));
+
+                list.innerHTML = "";
+                if (filtered.length === 0) { list.style.display = "none"; return; }
+
+                filtered.forEach(subject => {
+                    const li = document.createElement("li");
+                    li.className = "list-group-item list-group-item-action px-3 py-2";
+                    li.textContent = subject;
+                    li.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        input.value = subject;
+                        list.style.display = "none";
+                    });
+                    li.addEventListener("mousedown", (e) => e.preventDefault());
+                    list.appendChild(li);
+                });
+
+                list.style.display = "block";
+            }
+
+            input.addEventListener("focus", () => renderOptions(input.value));
+            input.addEventListener("input", () => renderOptions(input.value));
+
+            document.addEventListener("click", (e) => {
+                if (!wrapper.contains(e.target)) list.style.display = "none";
+            });
+
+            list.addEventListener("mousedown", (e) => e.preventDefault());
+        })();
+    </script>
+
+</body>
+</html>
